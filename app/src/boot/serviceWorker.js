@@ -1,4 +1,5 @@
 // src/boot/serviceWorker.js
+import { Notify } from 'quasar';
 
 async function registerAndUpdateServiceWorker() {
   if ('serviceWorker' in navigator) {
