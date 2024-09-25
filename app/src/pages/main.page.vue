@@ -4,6 +4,11 @@
       <q-item-label header>Subscriptions</q-item-label>
       <q-item>
         <q-item-section>
+          <q-btn @click="onClickSubscribe">Subscribe</q-btn>
+        </q-item-section>
+      </q-item>
+      <q-item>
+        <q-item-section>
           <q-btn @click="onClickSubscriptions">Get subscriptions</q-btn>
         </q-item-section>
       </q-item>
@@ -51,6 +56,7 @@ defineOptions({
 import { ref, onMounted, inject } from 'vue';
 import { useStore } from 'stores/store';
 import { useRouter } from 'vue-router';
+import { api as $api } from 'boot/axios';
 
 const $notify = inject('notify');
 const $store = useStore();
@@ -62,5 +68,30 @@ const onClickNotify = async () => {
 
 const onClickSubscriptions = async () => {
   await $store.getSubscriptions();
+};
+
+const onClickSubscribe = async () => {
+  if ('serviceWorker' in navigator && 'PushManager' in window) {
+    try {
+      console.log('Starting subscription...');
+      const registration = await navigator.serviceWorker.ready;
+      console.log(2);
+      const vapidPublicKey = (await $api.get('/vapid')).data;
+      console.log(vapidPublicKey);
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: vapidPublicKey
+      });
+      console.log('subscription', subscription);
+
+      const response = await $api.post('/subscribe', subscription);
+      $notify(response.data);
+      console.log('Push notification subscription successful');
+    } catch (error) {
+      console.error('Error subscribing to push notifications:', error);
+    }
+  } else {
+    console.log('Push notifications are not supported');
+  }
 };
 </script>

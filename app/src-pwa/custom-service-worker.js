@@ -6,25 +6,63 @@
  * quasar.config.js > pwa > workboxMode is set to "injectManifest"
  */
 
-import { clientsClaim } from 'workbox-core'
-import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from 'workbox-precaching'
-import { registerRoute, NavigationRoute } from 'workbox-routing'
+import { clientsClaim } from "workbox-core";
+import {
+  precacheAndRoute,
+  cleanupOutdatedCaches,
+  createHandlerBoundToURL,
+} from "workbox-precaching";
+import { registerRoute, NavigationRoute } from "workbox-routing";
 
-self.skipWaiting()
-clientsClaim()
+self.skipWaiting();
+clientsClaim();
 
 // Use with precache injection
-precacheAndRoute(self.__WB_MANIFEST)
+precacheAndRoute(self.__WB_MANIFEST);
 
-cleanupOutdatedCaches()
+cleanupOutdatedCaches();
 
 // Non-SSR fallback to index.html
 // Production SSR fallback to offline.html (except for dev)
-if (process.env.MODE !== 'ssr' || process.env.PROD) {
+if (process.env.MODE !== "ssr" || process.env.PROD) {
   registerRoute(
     new NavigationRoute(
       createHandlerBoundToURL(process.env.PWA_FALLBACK_HTML),
       { denylist: [/sw\.js$/, /workbox-(.)*\.js$/] }
     )
-  )
+  );
 }
+
+self.addEventListener("push", function (event) {
+  if (event.data) {
+    const data = event.data.json();
+
+    // Show notification
+    const promiseChain = self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/icon.png",
+    });
+
+    // Send message to main app
+    const allClients = clients.matchAll({
+      includeUncontrolled: true,
+      type: "window",
+    });
+
+    allClients.then(function (clientList) {
+      clientList.forEach(function (client) {
+        client.postMessage({
+          type: "PUSH_RECEIVED",
+          payload: data,
+        });
+      });
+    });
+
+    event.waitUntil(promiseChain);
+  }
+});
+
+self.addEventListener("notificationclick", function (event) {
+  event.notification.close();
+  event.waitUntil(clients.openWindow("https://push-0.app.michoest.com"));
+});
