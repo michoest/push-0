@@ -37,6 +37,8 @@ self.addEventListener("push", async function (event) {
   if (event.data) {
     const data = event.data.json();
 
+    console.log('event received: ', event);
+
     // Show notification
     // const promiseChain = self.registration.showNotification(data.title, {
     //   body: data.body,
@@ -64,10 +66,9 @@ self.addEventListener("push", async function (event) {
     //   icon: "/icon.png",
     // }));
 
-    console.log(data);
-    event.waitUntil(self.registration.showNotification('blabla', {
-      body: 'schallo'
-      // icon: "/icon.png",
+    console.log(data.title, data.body);
+    event.waitUntil(self.registration.showNotification(data.title, {
+      body: data.body
     }));
 
     // const notification = new Notification(data.title, {
