@@ -65,8 +65,8 @@ self.addEventListener("push", async function (event) {
     // }));
 
     console.log(data);
-    event.waitUntil(self.registration.showNotification(data.title, {
-      body: data.body,
+    event.waitUntil(self.registration.showNotification('blabla', {
+      body: 'schallo'
       // icon: "/icon.png",
     }));
 
