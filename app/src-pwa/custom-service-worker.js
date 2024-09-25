@@ -38,10 +38,10 @@ self.addEventListener("push", function (event) {
     const data = event.data.json();
 
     // Show notification
-    const promiseChain = self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: "/icon.png",
-    });
+    // const promiseChain = self.registration.showNotification(data.title, {
+    //   body: data.body,
+    //   icon: "/icon.png",
+    // });
 
     // Send message to main app
     const allClients = clients.matchAll({
@@ -58,7 +58,12 @@ self.addEventListener("push", function (event) {
       });
     });
 
-    event.waitUntil(promiseChain);
+    // event.waitUntil(promiseChain);
+
+    const notification = new Notification(data.title, {
+      body: data.body,
+      icon: "/icon.png",
+    });
   }
 });
 

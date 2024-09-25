@@ -122,13 +122,14 @@ app.post(
         console.log(subscription);
         try {
           await webpush.sendNotification(
-            subscription,
+            subscription.subscription,
             JSON.stringify(notification)
           );
           stats.sent++;
         } catch (err) {
           Subscriptions.remove(subscription);
           stats.removed++;
+          console.log(err);
         }
       })
     );
