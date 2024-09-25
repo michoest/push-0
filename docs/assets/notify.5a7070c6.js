@@ -1,1 +1,0 @@
-import{N as n}from"./index.698ad303.js";const p={positive:{color:"positive",icon:"check",position:"top",timeout:2e3},negative:{color:"negative",icon:"error_outline",position:"top",timeout:2e3}},r=(o,t={})=>{const{type:i="positive",...e}=t;n.create({message:o,...p[i],...e})};var c=({app:o})=>{o.provide("notify",r)};export{c as default,r as notify};

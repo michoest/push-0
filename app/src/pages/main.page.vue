@@ -33,12 +33,12 @@
           <q-item-label caption>{{ notification.body }}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item-label header>Store</q-item-label>
+      <!-- <q-item-label header>Store</q-item-label>
       <q-expansion-item>
         <q-item-section>
           {{ $store }}
         </q-item-section>
-      </q-expansion-item>
+      </q-expansion-item> -->
     </q-list>
   </q-page>
 </template>
