@@ -35,7 +35,7 @@ if (process.env.MODE !== "ssr" || process.env.PROD) {
 
 self.addEventListener("push", async function (event) {
   if (event.data) {
-    const data = JSON.parse(event.data.json());
+    const data = event.data.json();
 
     console.log('event received: ', event);
 

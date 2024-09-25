@@ -113,13 +113,12 @@ app.post(
 app.post(
   "/notify",
   asyncWrapper(async (req, res, next) => {
-    const notification = JSON.stringify(req.body.notification);
+    const notification = req.body.notification;
 
     const subscriptions = Subscriptions.find();
     const stats = { sent: 0, removed: 0 };
     await Promise.all(
       subscriptions.map(async (subscription) => {
-        console.log(subscription);
         try {
           await webpush.sendNotification(
             subscription.subscription,
