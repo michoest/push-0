@@ -58,16 +58,16 @@ self.addEventListener("push", async function (event) {
       });
     });
 
-    const registration = await navigator.serviceWorker.ready;
-    event.waitUntil(registration.showNotification(data.title, {
-      body: data.body,
-      icon: "/icon.png",
-    }));
+    // const registration = await navigator.serviceWorker.ready;
+    // event.waitUntil(registration.showNotification(data.title, {
+    //   body: data.body,
+    //   icon: "/icon.png",
+    // }));
 
 
     event.waitUntil(self.registration.showNotification(data.title, {
       body: data.body,
-      icon: "/icon.png",
+      // icon: "/icon.png",
     }));
 
     // const notification = new Notification(data.title, {
