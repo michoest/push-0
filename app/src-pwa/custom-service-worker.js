@@ -33,7 +33,7 @@ if (process.env.MODE !== "ssr" || process.env.PROD) {
   );
 }
 
-self.addEventListener("push", function (event) {
+self.addEventListener("push", async function (event) {
   if (event.data) {
     const data = event.data.json();
 
@@ -58,12 +58,22 @@ self.addEventListener("push", function (event) {
       });
     });
 
-    // event.waitUntil(promiseChain);
-
-    const notification = new Notification(data.title, {
+    const registration = await navigator.serviceWorker.ready;
+    event.waitUntil(registration.showNotification(data.title, {
       body: data.body,
       icon: "/icon.png",
-    });
+    }));
+
+
+    event.waitUntil(self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: "/icon.png",
+    }));
+
+    // const notification = new Notification(data.title, {
+    //   body: data.body,
+    //   icon: "/icon.png",
+    // });
   }
 });
 
